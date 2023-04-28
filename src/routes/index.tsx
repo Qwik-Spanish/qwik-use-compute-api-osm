@@ -1,101 +1,130 @@
-import { component$ } from '@builder.io/qwik';
+import {
+  $,
+  component$,
+  useComputed$,
+  useStore,
+  useStyles$,
+  useTask$,
+} from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
+import { isServer } from "@builder.io/qwik/build";
 
-import Counter from '~/components/starter/counter/counter';
-import Hero from '~/components/starter/hero/hero';
-import Infobox from '~/components/starter/infobox/infobox';
-import Starter from '~/components/starter/next-steps/next-steps';
+import { serverOSMPOIs } from '~/api/osm';
+import { poisTypes } from '~/data/poi-list';
 
 export default component$(() => {
+  useStyles$(`
+    button {
+      width: 250px;
+      margin: 5px;
+    }
+    .checked {
+      background-color: green;
+      color: whitesmoke;
+    }
+
+    .checked:hover {
+      background-color:  #063a06
+    }
+
+    .no-checked {
+      background-color: whitesmoke;
+    }
+
+    .no-checked:hover {
+      background-color: #740b0b;
+    }
+
+    .no-checked {
+      color: grey
+    }
+  
+  `);
+
+  const location = useStore({
+    data: {
+      name: 'Soraluze',
+      location: [43.17478, -2.41172],
+      boundaryBox:
+        '43.14658914559456,-2.4765586853027344,43.202923523094725,-2.3467826843261723',
+      zoom: 13,
+    },
+    pois: [],
+    select: {
+      name: 'Soraluze',
+      location: [43.17478, -2.41172],
+      boundaryBox:
+        '43.14658914559456,-2.4765586853027344,43.202923523094725,-2.3467826843261723',
+      zoom: 13,
+    }.name,
+  }, { deep: true });
+  const pois = useStore(poisTypes, { deep: true });
+
+  const poiSelectChange = $((index: number) => {
+    pois[index].checked = !pois[index].checked;
+  });
+
+  const checkedPoiOptions = useComputed$(() =>
+    pois.filter((option) => option.checked)
+  );
+
+  const poisSelected = useComputed$(() => {
+    return pois
+      .filter((item) => item.checked)
+      .map((option) => [...option.filterValues])
+      .flat();
+  });
+
+  useTask$(async () => {
+    if (isServer && poisSelected.value.length) {
+      location.pois = (
+        await serverOSMPOIs(location.data, poisSelected.value)
+      ).osmServices;
+      console.log(location.pois)
+    }
+  });
   return (
     <>
-      <Hero />
-      <Starter />
-
-      <div role="presentation" class="ellipsis"></div>
-      <div role="presentation" class="ellipsis ellipsis-purple"></div>
-
-      <div class="container container-center container-spacing-xl">
+      <div class='container container-center'>
         <h3>
-          You can <span class="highlight">count</span>
-          <br /> on me
+          Selecciona los <span class='highlight'>Puntos de Interés (POIs)</span>
+          <br /> deseados
         </h3>
-        <Counter />
-      </div>
-
-      <div class="container container-flex">
-        <Infobox>
-          <div q:slot="title" class="icon icon-cli">
-            CLI Commands
-          </div>
-          <>
-            <p>
-              <code>npm run dev</code>
-              <br />
-              Starts the development server and watches for changes
-            </p>
-            <p>
-              <code>npm run preview</code>
-              <br />
-              Creates production build and starts a server to preview it
-            </p>
-            <p>
-              <code>npm run build</code>
-              <br />
-              Creates production build
-            </p>
-            <p>
-              <code>npm run qwik add</code>
-              <br />
-              Runs the qwik CLI to add integrations
-            </p>
-          </>
-        </Infobox>
-
-        <div>
-          <Infobox>
-            <div q:slot="title" class="icon icon-apps">
-              Example Apps
-            </div>
-            <p>
-              Have a look at the <a href="/demo/flower">Flower App</a> or the{' '}
-              <a href="/demo/todolist">Todo App</a>.
-            </p>
-          </Infobox>
-
-          <Infobox>
-            <div q:slot="title" class="icon icon-community">
-              Community
-            </div>
-            <ul>
-              <li>
-                <span>Questions or just want to say hi? </span>
-                <a href="https://qwik.builder.io/chat" target="_blank">
-                  Chat on discord!
-                </a>
-              </li>
-              <li>
-                <span>Follow </span>
-                <a href="https://twitter.com/QwikDev" target="_blank">
-                  @QwikDev
-                </a>
-                <span> on Twitter</span>
-              </li>
-              <li>
-                <span>Open issues and contribute on </span>
-                <a href="https://github.com/BuilderIO/qwik" target="_blank">
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <span>Watch </span>
-                <a href="https://qwik.builder.io/media/" target="_blank">
-                  Presentations, Podcasts, Videos, etc.
-                </a>
-              </li>
-            </ul>
-          </Infobox>
-        </div>
+        <br />
+        {pois.map((option, index) => (
+          <button
+            key={option.label}
+            class={option.checked ? 'checked' : 'no-checked'}
+            onClick$={() => poiSelectChange(index)}
+          >
+            {option.label}
+          </button>
+        ))}
+        <h4>Selección</h4>
+        {checkedPoiOptions.value.map((option, index) => (
+          <span key={option.label}>
+            {option.label}{' '}
+            {index < checkedPoiOptions.value.length - 1 ? ',' : ''}
+          </span>
+        ))}
+        <h4>Filtros a aplicar</h4>
+        {JSON.stringify(poisSelected.value)}
+        <br />
+        <button
+          onClick$={async () => {
+            const boundaryBox: string =
+              '43.14658914559456,-2.50265121459961,43.202923523094725,-2.3206901550292973';
+            console.log('Lo que se va a mandar');
+            console.log({ boundaryBox }, poisSelected.value);
+            location.pois = (await serverOSMPOIs({ boundaryBox }, poisSelected.value))
+                .osmServices
+            ;
+          }}
+        >
+          Obtener info
+        </button>
+        <h4>Resultado</h4>
+        <div><code>{JSON.stringify(location.pois)}</code></div>
       </div>
     </>
   );
