@@ -12,10 +12,12 @@ import { defaultIcon, drinkWaterIcon, otherIcon } from "~/utils/icons/default";
 import { mapZoomConfigs, getBoundaryBox, addMapControls } from "~/helpers";
 
 import leafletStyles from "./../../../../node_modules/leaflet/dist/leaflet.css?inline";
+import leafletCustom from "./leaflet.css?inline";
 import leafletMarkerCluster from "./marker-cluster.css?inline";
 
 export const LeafletMap = component$(({ location }: any) => {
   useStyles$(leafletStyles);
+  useStyles$(leafletCustom);
   useStyles$(leafletMarkerCluster);
   const mapContainer$ = useSignal<L.Map>();
 

@@ -9,6 +9,7 @@ import styles from './styles.css?inline';
 export const useServerTimeLoader = routeLoader$(() => {
   return {
     date: new Date().toISOString(),
+    year: new Date().getFullYear()
   };
 });
 

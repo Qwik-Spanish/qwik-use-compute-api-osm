@@ -13,59 +13,13 @@ import { serverOSMPOIs } from "~/api/osm";
 import { LeafletMap } from "~/components/starter/leaflet";
 import { poisTypes } from "~/data/poi-list";
 
+// Styles
+import indexStyles from './index.css?inline'
+import poisButtosStyles from './pois-buttons.css?inline';
+import Alert from "~/components/starter/alert";
 export default component$(() => {
-  useStyles$(`
-  #map {
-    margin-top: 1rem;
-    height: 450px;
-    border: 5px solid var(--custom-blue);
-  }
-
-  .leaflet-popup-content h1 {
-    color: black;
-  }
-
-  .leaflet-control-layers-list {
-    text-align: left;
-  }
-
-  .select {
-    background-color: grey !important;
-    color: whitesmoke !important;
-  }
-    button {
-      width: 250px;
-      margin: 5px;
-    }
-    .checked {
-      background-color: green;
-      color: whitesmoke;
-    }
-
-    .checked:hover {
-      background-color:  #063a06
-    }
-
-    .no-checked {
-      background-color: whitesmoke;
-    }
-
-    .no-checked:hover {
-      background-color: #740b0b;
-    }
-
-    .no-checked {
-      color: grey
-    }
-
-    details {
-      margin-top: 1rem;
-    }
-    details:hover {
-      cursor:pointer;
-    }
-  
-  `);
+  useStyles$(indexStyles);
+  useStyles$(poisButtosStyles);
 
   const location = useStore(
     {
@@ -127,7 +81,8 @@ export default component$(() => {
         ))}
         <br />
         {poisSelected.value.length === 0 ? (
-          <p>Debes de seleccionar un tipo de POI para hacer la búsqueda </p>
+          
+          <Alert type={"warning"} text="Debes de seleccionar un tipo de POI para hacer la búsqueda" />
         ) : (
           <button
             onClick$={async () => {
@@ -156,11 +111,47 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: "OSM POIS - Cities",
   meta: [
     {
       name: "description",
-      content: "Qwik site description",
+      content:
+        "Consumir la API de Open Street Map que toma puntos de referencia con filtros de aplicación que se obtienen de una API de NestJS mediante la consulta con OverpassQL",
+    },
+    {
+      name: "keywords",
+      content: "osm, openstreetmap, qwik, leaflet, leaflet marker cluster",
+    },
+    {
+      name: "author",
+      content: "Anartz Mugika Ledo",
+    },
+    {
+      name: "og:image",
+      content: "https://jgengle.github.io/Leaflet/examples/quick-start/thumbnail.png",
+    },
+    {
+      name: "og:url",
+      content: "https://qwik-osm-poc.netlify.app/",
+    },
+    {
+      name: "twitter:image",
+      content: "https://jgengle.github.io/Leaflet/examples/quick-start/thumbnail.png",
+    },
+    {
+      name: "twitter:card",
+      content: "summary_large_image",
+    },
+    {
+      name: "twitter:title",
+      content: "OpenStreetMap API + Qwik",
+    },
+    {
+      name: "twitter:description",
+      content: "Proyecto en Qwik para consumir una API de NestJS que nos da información de POIs de OpenStreetMap",
     },
   ],
 };
+
+
+

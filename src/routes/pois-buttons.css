@@ -1,0 +1,30 @@
+button {
+    width: 250px;
+    margin: 5px;
+}
+
+.checked {
+    background-color: var(--qwik-light-blue);
+    color: whitesmoke;
+}
+
+.checked:hover, .no-checked:hover {
+    background-color: var(--qwik-dark-blue);
+    color: whitesmoke;
+}
+
+.no-checked {
+    background-color: whitesmoke;
+}
+
+.no-checked {
+    color: grey
+}
+
+details {
+    margin-top: 1rem;
+}
+
+details:hover {
+    cursor: pointer;
+}
