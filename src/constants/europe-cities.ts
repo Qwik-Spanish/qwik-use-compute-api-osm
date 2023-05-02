@@ -120,3 +120,12 @@ export const EUROPE_CITIES = [
         zoom: 16
     }
 ];
+
+export const SHOW_CITIES = [
+    EUROPE_CITIES[0],
+    EUROPE_CITIES[3],
+    EUROPE_CITIES[16],
+    EUROPE_CITIES[10],
+    EUROPE_CITIES[12],
+    EUROPE_CITIES[14]
+]

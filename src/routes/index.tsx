@@ -17,31 +17,33 @@ import { poisTypes } from "~/data/poi-list";
 import indexStyles from './index.css?inline'
 import poisButtosStyles from './pois-buttons.css?inline';
 import Alert from "~/components/starter/alert";
+import { SHOW_CITIES } from "~/constants/europe-cities";
 export default component$(() => {
   useStyles$(indexStyles);
   useStyles$(poisButtosStyles);
 
   const location = useStore(
     {
-      data: {
-        name: "Soraluze",
-        location: [43.17478, -2.41172],
-        boundaryBox:
-          "43.14658914559456,-2.4765586853027344,43.202923523094725,-2.3467826843261723",
-        zoom: 13,
-      },
+      data: SHOW_CITIES[0],
       pois: [],
-      select: {
-        name: "Soraluze",
-        location: [43.17478, -2.41172],
-        boundaryBox:
-          "43.14658914559456,-2.4765586853027344,43.202923523094725,-2.3467826843261723",
-        zoom: 13,
-      }.name,
+      select: SHOW_CITIES[0].name,
     },
     { deep: true }
   );
+
+  
   const pois = useStore(poisTypes, { deep: true });
+
+  const citySelectChange = $((item: {
+    name: string;
+    location: number[];
+    boundaryBox: string;
+    zoom: number;
+}) => {
+    location.data = item;
+    location.select = item.name;
+    location.pois.length = 0;
+  });
 
   const poiSelectChange = $((index: number) => {
     pois[index].checked = !pois[index].checked;
@@ -66,8 +68,21 @@ export default component$(() => {
     <>
       <div class="container container-center">
         <h3>
-          Selecciona los <span class="highlight">Puntos de Interés (POIs)</span>
-          <br /> deseados
+          <span class="highlight">Ciudad</span> seleccionada
+        </h3>
+        <br />
+        {SHOW_CITIES.map((option, index) => (
+          <button
+            key={option.name}
+            class={location.select === option.name ? "checked" : "no-checked"}
+            onClick$={() => citySelectChange(option)}
+          >
+            {option.name}
+          </button>
+        ))}
+        <br /><br />
+        <h3>
+          <span class="highlight">Puntos de Interés (POIs)</span> deseados
         </h3>
         <br />
         {pois.map((option, index) => (
@@ -87,7 +102,7 @@ export default component$(() => {
           <button
             onClick$={async () => {
               const boundaryBox: string =
-                "43.14658914559456,-2.50265121459961,43.202923523094725,-2.3206901550292973";
+                location.data.boundaryBox;
               console.log("Lo que se va a mandar");
               console.log({ boundaryBox }, poisSelected.value);
               location.pois = (

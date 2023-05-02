@@ -24,6 +24,8 @@ export const LeafletMap = component$(({ location }: any) => {
   useVisibleTask$(async ({ track }) => {
     track(location);
     const pointCenter = location.data.location;
+
+    console.log(location)
     
     if (location && window) {
       if (mapContainer$.value) {
