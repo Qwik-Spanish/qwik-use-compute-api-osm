@@ -71,7 +71,7 @@ export default component$(() => {
           <span class="highlight">Ciudad</span> seleccionada
         </h3>
         <br />
-        {SHOW_CITIES.map((option, index) => (
+        {SHOW_CITIES.map((option) => (
           <button
             key={option.name}
             class={location.select === option.name ? "checked" : "no-checked"}

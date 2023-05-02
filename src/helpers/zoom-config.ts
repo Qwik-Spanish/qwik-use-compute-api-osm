@@ -3,7 +3,7 @@ import { getBoundaryBox } from "./boundary-box";
 import type { ILocation } from "~/models/location";
 
 export const mapZoomConfigs = (map: Map, location: ILocation) => {
-    map.setMinZoom(9);
+    map.setMinZoom(13);
     map.setMaxZoom(18);
 
     map.on("zoom", () => {
