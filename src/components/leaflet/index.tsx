@@ -11,7 +11,7 @@ import * as L from "leaflet";
 import { defaultIcon, drinkWaterIcon, otherIcon } from "~/utils/icons/default";
 import { mapZoomConfigs, getBoundaryBox, addMapControls } from "~/helpers";
 
-import leafletStyles from "./../../../../node_modules/leaflet/dist/leaflet.css?inline";
+import leafletStyles from "./../../../node_modules/leaflet/dist/leaflet.css?inline";
 import leafletCustom from "./leaflet.css?inline";
 import leafletMarkerCluster from "./marker-cluster.css?inline";
 
