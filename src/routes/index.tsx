@@ -99,10 +99,6 @@ export default component$(() => {
         </button>
       ))}
       <br />
-      { location.loading ? <Alert
-          type={"info"}
-          text="Buscando los Puntos de Interés (POIs) asociados a tu búsqueda"
-        />: undefined}
       {poisSelected.value.length === 0 ? (
         <Alert
           type={"warning"}
@@ -113,8 +109,8 @@ export default component$(() => {
           onClick$={async () => {
             location.loading = 1;
             const boundaryBox: string = location.data.boundaryBox;
-            console.log("Lo que se va a mandar");
-            console.log({ boundaryBox }, poisSelected.value);
+            // console.log("Lo que se va a mandar");
+            // console.log({ boundaryBox }, poisSelected.value);
             location.pois = (
               await serverOSMPOIs({ boundaryBox }, poisSelected.value)
             ).osmServices;
@@ -131,6 +127,10 @@ export default component$(() => {
           <code>{JSON.stringify(location.pois)}</code>
         </div>
       </details>
+      { location.loading ? <Alert
+          type={"info"}
+          text="Buscando los Puntos de Interés (POIs) asociados a tu búsqueda"
+        />: undefined}
       <div style={`visibility: ${location.loading ? 'hidden': 'visible'}`}>
         <LeafletMap location={location} />
       </div>
