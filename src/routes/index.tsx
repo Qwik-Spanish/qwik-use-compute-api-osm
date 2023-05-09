@@ -118,6 +118,7 @@ export default component$(() => {
             location.pois = (
               await serverOSMPOIs({ boundaryBox }, poisSelected.value)
             ).osmServices;
+            await delay(600)
             location.loading = 0;
           }}
         >
