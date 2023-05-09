@@ -18,6 +18,8 @@ import indexStyles from "./index.css?inline";
 import poisButtosStyles from "./pois-buttons.css?inline";
 import Alert from "~/components/alert";
 import { SHOW_CITIES } from "~/constants/europe-cities";
+
+
 export default component$(() => {
   useStyles$(indexStyles);
   useStyles$(poisButtosStyles);
@@ -26,7 +28,8 @@ export default component$(() => {
     {
       data: SHOW_CITIES[0],
       pois: [],
-      select: SHOW_CITIES[0].name
+      select: SHOW_CITIES[0].name,
+      loading: 1
     },
     { deep: true }
   );
@@ -58,10 +61,11 @@ export default component$(() => {
   });
 
   useTask$(async () => {
-    if (isServer && poisSelected.value.length) {
+    if (isServer && location.loading) {
       location.pois = (
         await serverOSMPOIs(location.data, poisSelected.value)
       ).osmServices;
+      location.loading = 0;
     }
   });
   return (
@@ -95,6 +99,10 @@ export default component$(() => {
         </button>
       ))}
       <br />
+      { location.loading ? <Alert
+          type={"info"}
+          text="Buscando los Puntos de Interés (POIs) asociados a tu búsqueda"
+        />: undefined}
       {poisSelected.value.length === 0 ? (
         <Alert
           type={"warning"}
@@ -103,12 +111,14 @@ export default component$(() => {
       ) : (
         <button
           onClick$={async () => {
+            location.loading = 1;
             const boundaryBox: string = location.data.boundaryBox;
             console.log("Lo que se va a mandar");
             console.log({ boundaryBox }, poisSelected.value);
             location.pois = (
               await serverOSMPOIs({ boundaryBox }, poisSelected.value)
             ).osmServices;
+            location.loading = 0;
           }}
         >
           Obtener info
@@ -120,7 +130,9 @@ export default component$(() => {
           <code>{JSON.stringify(location.pois)}</code>
         </div>
       </details>
-      <LeafletMap location={location} />
+      <div style={`visibility: ${location.loading ? 'hidden': 'visible'}`}>
+        <LeafletMap location={location} />
+      </div>
     </div>
   );
 });

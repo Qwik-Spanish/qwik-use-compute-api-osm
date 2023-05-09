@@ -17,6 +17,12 @@ export default component$((props: AlertProps) => {
         background-color: #fff3cd;
         border-color: #ffeeba;
       }
+
+      .alert-info {
+        color: #055160;
+        background-color: #cff4fc;
+        border-color: #b6effb;
+      }
       
       .alert-success {
         background-color: #d1e7dd;
