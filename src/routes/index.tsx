@@ -78,7 +78,7 @@ export default component$(() => {
     const { latitude: lat, longitude: lng } = currentLocation.value;
     if (lat !== 0 && lng !== 0) {
       const item = {
-        name: 'Our location',
+        name: 'Nuestra ubicación',
         location: [lat || 0, lng || 0],
         zoom: 13,
         boundaryBox: '',
