@@ -118,6 +118,12 @@ export const EUROPE_CITIES = [
         location: [48.2082, 16.3738],
         boundaryBox: '48.094567,16.111757,48.320662,16.635843',
         zoom: 16
+    },
+    {
+        name: 'Nuestra ubicación',
+        location: [0, 0],
+        boundaryBox: '',
+        zoom: 13
     }
 ];
 
@@ -127,5 +133,6 @@ export const SHOW_CITIES = [
     EUROPE_CITIES[16],
     EUROPE_CITIES[10],
     EUROPE_CITIES[12],
-    EUROPE_CITIES[14]
+    EUROPE_CITIES[14],
+    EUROPE_CITIES[EUROPE_CITIES.length - 1]
 ]
